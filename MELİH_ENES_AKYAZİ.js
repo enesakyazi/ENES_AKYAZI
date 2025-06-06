@@ -82,7 +82,7 @@
         .product-card {
             border: 2px solid transparent;
             border-radius: 12px;
-            padding: 10px;
+            padding: 17px;
             background: white;
             position: relative;
             cursor: pointer;
@@ -91,6 +91,9 @@
             flex-direction: column;
             justify-content: space-between;
             margin-right: 20px;
+            width: 18.9%;
+            border: 1px solid #ededed;
+            border-radius: 10px;
         }
 
         .product-card:hover {
@@ -243,13 +246,10 @@
             margin-top: auto;
         }
 
-        .product-card {
-            width: 19%;
-        }
 
         @media (max-width: 1480px) {
             .product-card {
-                width: 23.2%;
+                width: 23.5%;
             }
              #carousel-container {
             width: 85%;
@@ -275,7 +275,7 @@
 
         @media (max-width: 992px) {
             .product-card {
-                width: 47%;
+                width: 49%;
             }
             #carousel-container {
                 width: 52%;
@@ -320,9 +320,15 @@
   };
 
   const getProducts = async () => {
-    // In a real environment, this would work with localStorage
+    const cached = localStorage.getItem(STORAGE_KEYS.products);
+    if (cached) {
+      return JSON.parse(cached); // local storage kontrolü
+    }
+
+    //local storage boşsa fetchle
     const res = await fetch(API_URL);
     const data = await res.json();
+    localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(data));
     return data;
   };
 
