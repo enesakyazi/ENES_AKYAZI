@@ -201,6 +201,21 @@
             border: 1px solid #f28e00;
             box-shadow: 0 0 6px #f28e00;
         }
+        
+        .discount-banner {
+            min-height:50px
+        }
+
+        .discount-banner span{
+          background: #eaf8f3;
+          color: #4bb788;
+          border-radius: 15px;
+          width: -moz-fit-content;
+          width: fit-content;
+          padding: 5.5px 9px 4.5px;
+          font-weight: 600;
+          font-size: 1.08rem;
+        }
 
         .carousel-btn {
             width: 50px;
@@ -230,7 +245,7 @@
         .star-wrapper {
             color: #fed100;
             font-size: 24px;
-            padding: 5px 0 15px;
+            padding: 5px 0 5px;
             margin-bottom: .5rem;
         }
 
@@ -424,7 +439,7 @@
             </div>
         `);
       }
-
+      $info.append(`<div class="discount-banner"><span>2. Ürüne %50 indirim</span></div>`)
       $info.append(`<button class="add-to-cart">Sepete Ekle</button>`);
 
       const isFavorite = favorites.includes(product.id);
