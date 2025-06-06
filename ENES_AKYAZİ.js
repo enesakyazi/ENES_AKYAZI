@@ -2,8 +2,8 @@
   const API_URL =
     "https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json";
   const STORAGE_KEYS = {
-    products: "ebebek_products",
-    favorites: "ebebek_favorites",
+    products: "carousel_products",
+    favorites: "carousel_favorites",
   };
 
   const loadJQuery = () => {
@@ -20,6 +20,7 @@
       document.head.appendChild(script);
     });
   };
+
   const loadFont = () => {
     const link = document.createElement("link");
     link.href =
@@ -30,14 +31,16 @@
 
   const buildCSS = () => {
     const css = `
+        * {
+            box-sizing: border-box;
+        }
         #carousel-container {
             width: 100%;
             max-width: 1320px;
             margin: 20px auto;
-            padding: 15px;
-            border-radius: 16px;
-            box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.05);
+            border-radius: 50px 50px 16px 16px;
             position: relative;
+            box-shadow: 0 2px 4px 0 #00000024;
         }
 
         #carousel-container h2 {
@@ -65,17 +68,18 @@
             font-weight: 700;
         }
 
+        .carousel-viewport {
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
         .carousel-track {
             display: flex;
-            margin-top:20px;
-            width: 3930px;
             transform: translateX(0);
             transition: transform 0.3s ease;
         }
 
         .product-card {
-            width: 242px;
-            margin-right: 20px;
             border: 2px solid transparent;
             border-radius: 12px;
             padding: 10px;
@@ -83,16 +87,15 @@
             position: relative;
             cursor: pointer;
             flex-shrink: 0;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-            transition: border 0.3s ease;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            }
+            margin-right: 20px;
+        }
 
         .product-card:hover {
-            border-color: orange;
-            }
+            border-color: #f28e00;
+        }
 
         .product-image {
             height: 180px;
@@ -100,19 +103,19 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 10px;
-            }
+        }
 
         .product-image img {
             max-height: 100%;
-            obejct-fit: contain;
-            }
+            object-fit: contain;
+        }
 
         .product-info {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             flex-grow: 1;
-            }     
+        }     
 
         .product-title {
             font-size: 1.2rem;
@@ -121,8 +124,8 @@
             margin-bottom: 5px;
             min-height: 55px; 
             line-height: 1.2;
-            color: #7d7d7d
-            }
+            color: #7d7d7d;
+        }
 
         .product-price {
             display: block;
@@ -131,15 +134,15 @@
             font-weight: 600;
             height: 43px;
             color: #7d7d7d;
-            }
+        }
 
         .price-discount-wrapper {
             display: flex;
             flex-direction: column;
-            }
+        }
+
         .product-price.discounted{
             color: #00a365;
-
         }
 
         .discount-rate {
@@ -154,21 +157,19 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            }
-
+        }
 
         .old-price {
             text-decoration: line-through;
             color: #999;
             font-size: 12px;
             margin-left: 5px;
-            }
+        }
 
         .discount {
             color: #f28e00;
             font-size: 13px;
-            }
-        
+        }
 
         .heart {
             position: absolute;
@@ -187,16 +188,16 @@
             color: #ccc;
             transition: all 0.3s ease;
             z-index: 2;
-            }
+        }
 
         .heart.filled {
-            color: orange;
-            }
+            color: #f28e00;
+        }
 
         .heart:hover {
-            border: 1px solid orange;
-            box-shadow: 0 0 6px orange;
-            }
+            border: 1px solid #f28e00;
+            box-shadow: 0 0 6px #f28e00;
+        }
 
         .carousel-btn {
             width: 50px;
@@ -211,27 +212,25 @@
             transform: translateY(-50%);
             cursor: pointer;
             z-index: 9;
-            }
-        
+        }
 
         .carousel-btn.left {
             background-image: url('/assets/svg/prev.svg');
             left: -65px;
-            }
+        }
 
         .carousel-btn.right {
             background-image: url('/assets/svg/next.svg');
             right: -65px;
-            }
-        .carousel-viweport {
-            overflow: hidden;
-            }
+        }
+
         .star-wrapper {
             color: #fed100;
             font-size: 24px;
             padding: 5px 0 15px;
-            margin-bottom: .5rem
-            }
+            margin-bottom: .5rem;
+        }
+
         .add-to-cart{
             width: 100%;
             padding: 15px 20px;
@@ -242,20 +241,106 @@
             font-size: 1.4rem;
             font-weight: 700;
             margin-top: auto;
-            }`;
+        }
+
+        .product-card {
+            width: 19%;
+        }
+
+        @media (max-width: 1480px) {
+            .product-card {
+                width: 23.2%;
+            }
+             #carousel-container {
+            width: 85%;
+        }
+        }
+
+        @media (max-width: 1280px) {
+            .product-card {
+                width: 32%;
+            }
+            
+            .carousel-title-wrapper {
+                padding: 20px 40px;
+            }
+            
+            #carousel-container h2 {
+                font-size: 2.5rem;
+            }
+            #carousel-container {
+            width: 70%;
+        }
+        }
+
+        @media (max-width: 992px) {
+            .product-card {
+                width: 47%;
+            }
+            #carousel-container {
+                width: 52%;
+            }
+
+            .carousel-title-wrapper {
+                padding: 15px 20px;
+            }
+            
+            #carousel-container h2 {
+                font-size: 2rem;
+            }
+            
+            .carousel-btn.left {
+                left: -45px;
+            }
+            
+            .carousel-btn.right {
+                right: -45px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .carousel-btn.left {
+                left: -25px;
+            }
+            
+            .carousel-btn.right {
+                right: -25px;
+            }
+            #carousel-container {
+                width: 40%;
+            }
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+                background-position: 15px center;
+            }
+        }`;
+
     jQuery("<style>").addClass("carousel-style").html(css).appendTo("head");
   };
 
   const getProducts = async () => {
-    const stored = localStorage.getItem(STORAGE_KEYS.products);
-    if (stored) {
-      return JSON.parse(stored);
-    }
-
+    // In a real environment, this would work with localStorage
     const res = await fetch(API_URL);
     const data = await res.json();
-    localStorage.setItem(STORAGE_KEYS.products, JSON.stringify(data));
     return data;
+  };
+
+  const getVisibleCount = () => {
+    if (window.innerWidth <= 992) return 2;
+    if (window.innerWidth <= 1280) return 3;
+    return 4;
+  };
+
+  const FAVORITES_KEY = STORAGE_KEYS.favorites;
+
+  const getFavorites = () => {
+    const favs = localStorage.getItem(FAVORITES_KEY);
+    return favs ? JSON.parse(favs) : [];
+  };
+
+  const setFavorites = (favs) => {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
   };
 
   const buildHTML = (products) => {
@@ -263,19 +348,29 @@
       localStorage.getItem(STORAGE_KEYS.favorites) || "[]"
     );
 
+    const $outerWrapper = jQuery(
+      '<div class="carousel-outer-wrapper" style="width: 100%;"></div>'
+    );
     const $container = jQuery('<div id="carousel-container"></div>');
+
     const $titleWrapper = jQuery('<div class="carousel-title-wrapper"></div>');
     const $title = jQuery("<h2>Beğenebileceğinizi düşündüklerimiz</h2>");
 
     const $carouselWrapper = jQuery('<div class="carousel-wrapper"></div>');
-    const $carouselViewport = jQuery('<div class="carousel-viewport"></div>'); 
+    const $carouselViewport = jQuery('<div class="carousel-viewport"></div>');
     const $track = jQuery('<div class="carousel-track"></div>');
 
-    const cardWidth = 242;
-    const marginRight = 20;
-    const visibleCount = 5;
-    const scrollStep = cardWidth + marginRight;
     let position = 0;
+    let visibleCount = getVisibleCount();
+
+    const updateCarousel = () => {
+      const newVisibleCount = getVisibleCount();
+      if (newVisibleCount !== visibleCount) {
+        visibleCount = newVisibleCount;
+        position = 0;
+        $track.css("transform", `translateX(0)`);
+      }
+    };
 
     products.forEach((product) => {
       const hasDiscount = product.price !== product.original_price;
@@ -311,7 +406,7 @@
                2
              )} TL</div>
             </div>
-  `);
+        `);
       } else {
         $info.append(`
          <div class="price-discount-wrapper">
@@ -345,16 +440,32 @@
 
     const $leftBtn = jQuery('<button class="carousel-btn left"></button>');
     const $rightBtn = jQuery('<button class="carousel-btn right"></button>');
-    const maxScroll = (products.length - visibleCount) * scrollStep;
+
+    const getMaxScroll = () => {
+      const currentVisibleCount = getVisibleCount();
+      return Math.max(0, products.length - currentVisibleCount);
+    };
 
     $leftBtn.on("click", () => {
-      position = Math.max(0, position - scrollStep);
-      $track.css("transform", `translateX(-${position}px)`);
+      if (position > 0) {
+        position--;
+        const translateX = (position * 100) / getVisibleCount();
+        $track.css("transform", `translateX(-${translateX}%)`);
+      }
     });
 
     $rightBtn.on("click", () => {
-      position = Math.min(maxScroll, position + scrollStep);
-      $track.css("transform", `translateX(-${position}px)`);
+      const maxScroll = getMaxScroll();
+      if (position < maxScroll) {
+        position++;
+        const translateX = (position * 100) / getVisibleCount();
+        $track.css("transform", `translateX(-${translateX}%)`);
+      }
+    });
+
+    // Window resize handler
+    jQuery(window).on("resize", () => {
+      updateCarousel();
     });
 
     $carouselViewport.append($track);
@@ -362,11 +473,12 @@
     $titleWrapper.append($title);
     $container.append($titleWrapper, $carouselWrapper);
 
-    const section2A = $('cx-page-slot[position="Section2A"]');
+    $outerWrapper.append($container);
+    const section2A = jQuery('cx-page-slot[position="Section2A"]');
     if (section2A.length) {
-      section2A.prepend($container);
+      section2A.prepend($outerWrapper);
     } else {
-      $("body").append($container);
+      jQuery("body").append($outerWrapper);
     }
   };
 
@@ -374,11 +486,9 @@
     jQuery(document).on("click", ".heart", function (e) {
       e.stopPropagation();
       const id = parseInt(jQuery(this).attr("data-id"));
-      let favorites = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.favorites) || "[]"
-      );
+      let favorites = getFavorites();
 
-      if (favorites.includes(id)) {
+      if (jQuery(this).hasClass("filled")) {
         favorites = favorites.filter((favId) => favId !== id);
         jQuery(this).removeClass("filled");
       } else {
@@ -386,7 +496,7 @@
         jQuery(this).addClass("filled");
       }
 
-      localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(favorites));
+      setFavorites(favorites);
     });
   };
 
@@ -399,6 +509,7 @@
     await loadJQuery();
     loadFont();
     buildCSS();
+
     const products = await getProducts();
     buildHTML(products);
     setEvents();
